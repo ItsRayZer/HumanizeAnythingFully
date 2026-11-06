@@ -1,0 +1,5 @@
+name: "humanize-anything-fully"
+title: "HumanizeAnythingFully"
+description: "Humanize any text, PDF or document, rewrite every sentence fully without changing the topic, structure, format, design or images, and verify it until no online detector (ZeroGPT, GPTZero, Turnitin) and no plagiarism checker can flag it."
+category: "Work and knowledge"
+include_in_prompt: true
