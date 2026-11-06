@@ -9,6 +9,8 @@ Give it any text or PDF and it returns a humanized version:
 - Every sentence rewritten fully, in a natural human voice, not just the flagged ones
 - Topic, structure, format, design, images, fonts, colours, layout, margins, and page size stay exactly the same as the original, only the prose wording changes
 - Verified until no online detector can flag it: ZeroGPT under 15 percent, GPTZero agreeing it reads human, plagiarism 0 to 1 percent
+- Built-in AI and plagiarism detection that finds flagged sentences and fixes them, with ZeroGPT and GPTZero as the outside confirmation checks
+- Front matter pages (index, declaration, certificate, acknowledgement, lists), headlines, and subheadlines are never changed, only the body prose underneath them is rewritten
 - Works with any PDF and any text
 
 ## How it works
@@ -33,7 +35,7 @@ It is packaged for Claude, ChatGPT, Gemini, and other agents. See `INSTALL.md` f
 - ChatGPT: paste `chatgpt-instructions.md` into a custom GPT and upload `SKILL.md` as knowledge
 - Gemini: use `GEMINI.md` for a Gem, or install `gemini-extension.json` in Gemini CLI
 - Codex, Cursor, VS Code Copilot: copy the skill into the agent skills folder, see `INSTALL.md`
-- Any MCP client: run the server in `mcp-server/`, it exposes `humanize_text` and `check_text` tools over stdio, free with your own free LLM key
+- Any MCP client: run the server in `mcp-server/`, it exposes `humanize_text`, `check_text`, `detect_ai`, and `detect_plagiarism` tools over stdio, free with your own free LLM key
 
 ## Proven results
 

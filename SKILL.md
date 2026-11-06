@@ -23,6 +23,22 @@ print("page rect:", doc[0].rect)
 
 - Read the whole extracted text once before rewriting, and mark the parts that must stay word for word, such as the title page, the declaration, the certificate, table cell values and the bibliography.
 
+## Never touch the front matter
+
+- The pages before the real content are never changed: title page, declaration, certificate, acknowledgement, contents (index) page, list of figures, list of tables. They are copied exactly as the original, word for word.
+
+- Headlines never change. Every heading in the document, chapter titles and section titles, stays exactly as the original, word for word. Only the body prose underneath a heading gets rewritten, never the heading itself.
+
+- Subheadlines never change. Every subheading in the document, subsection titles at every level, stays exactly as the original, word for word, just like the headlines.
+
+- The rule is: front matter pages, headlines, and subheadlines never change, only the body prose underneath them gets rewritten.
+
+- Only the page numbers inside the contents and the lists are corrected to the new pagination, because the original numbers point at the original pages. Nothing else on those pages changes.
+
+- The rewrite starts only at the first real content chapter. Nothing before it is rewritten, reworded, or restyled.
+
+- Verify it: compare every front matter page, every headline, and every subheadline against the original and confirm they are identical except for the corrected page numbers and the stamped page numbers. If any heading differs by even one word, the build is wrong, fix it before you deliver.
+
 ## Rewrite the prose
 
 - Rewrite the prose with the humanizer skill, sentence by sentence, in a natural human voice, and keep every fact, number, date, citation, heading, section number, table cell value, figure caption and bibliography entry identical in meaning.
@@ -35,11 +51,25 @@ print("page rect:", doc[0].rect)
 
 - For simple factual text, use the personal voice lever: first person where the document allows it, concrete personal details, the writer's own lab or work story, specific places and moments, because definitions and short factual sentences are statistically predictable no matter how they are phrased. The turmeric project proved this: five rewrite passes floored ZeroGPT at about 55 to 60 percent, since its chapter 1 is almost entirely definitions.
 
-- Keep front matter that must stay verbatim exactly as the original text, and mark those sections in the working file so no rewrite pass touches them.
+- Keep the front matter, headlines, and subheadlines exactly as the original, as the Never touch the front matter section says, and mark those parts in the working file so no rewrite pass touches them.
 
 - Keep the rewritten file in the same structure as the original, with the same headings, lists, tables and figure captions in the same order.
 
 - Keep the word count within 10 percent of the original unless the user asked for a different length.
+
+## Detect and fix
+
+- The product detects AI text and plagiarism itself and fixes what it finds. Run the built-in AI detector and the built-in plagiarism detector on the rewritten text before you rebuild the PDF.
+
+- The built-in AI detector is a local heuristic estimate based on the ai-detector skill signals: burstiness (sentence length mean and variance), stock AI phrases, repeated sentence openings, and uniform paragraph length. It is not ZeroGPT and it is not GPTZero. ZeroGPT and GPTZero remain the outside confirmation checks, run them as well and record their scores.
+
+- The built-in plagiarism detector is a client for the local free plagiarism checker, which matches runs of 7 or more words against public pages. Drive similarity to 0 to 1 percent.
+
+- Take every flagged sentence, from either detector, and rewrite it structurally: change the word order, split it in two, change active to passive or the other way round, start from a different point, or add a short human aside in the middle. A synonym swap alone does not fix a flagged sentence.
+
+- Re-run both detectors after each round of fixes, and repeat until no sentence is flagged by either one. Only then rebuild the PDF.
+
+- Never treat a clean built-in score as proof of authorship, and never use it to claim AI written work is human written. The built-in score is an estimate, the outside checks are the confirmation.
 
 ## Remove plagiarism
 

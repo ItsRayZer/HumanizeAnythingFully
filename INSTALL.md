@@ -124,7 +124,7 @@ Add the bundled MCP server with a stdio config. You do this, and you need your o
 }
 ```
 
-Replace the path with the real path on your machine. Keep your key out of shared files. See `mcp-server/README.md` for the full run instructions. `check_text` works with no key. `humanize_text` returns an error, not fake output, when no key is set.
+Replace the path with the real path on your machine. Keep your key out of shared files. See `mcp-server/README.md` for the full run instructions. `check_text` works with no key. `humanize_text` returns an error, not fake output, when no key is set. The server also exposes `detect_ai` (local heuristic AI estimate, no key, no LLM) and `detect_plagiarism` (uses the local free plagiarism checker, start it with `npm start` in `~/workspace/free-turnitin-checker` first, see `mcp-server/README.md`).
 
 ## What I did not verify live
 
