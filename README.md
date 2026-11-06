@@ -25,6 +25,16 @@ The skill is a full workflow, not a single prompt:
 
 This is an agent skill. Copy the `SKILL.md` and `skill.yaml` into your agent's skills directory and it loads as the `humanize-anything-fully` skill. It pairs with a `humanizer` skill for the rewrite itself and an `ai-detector` skill for the detector logic.
 
+## Use it with your agent
+
+It is packaged for Claude, ChatGPT, Gemini, and other agents. See `INSTALL.md` for the exact steps per platform.
+
+- Claude Code and Claude app: install as a plugin from `.claude-plugin/`, or copy the skill into your skills directory
+- ChatGPT: paste `chatgpt-instructions.md` into a custom GPT and upload `SKILL.md` as knowledge
+- Gemini: use `GEMINI.md` for a Gem, or install `gemini-extension.json` in Gemini CLI
+- Codex, Cursor, VS Code Copilot: copy the skill into the agent skills folder, see `INSTALL.md`
+- Any MCP client: run the server in `mcp-server/`, it exposes `humanize_text` and `check_text` tools over stdio, free with your own free LLM key
+
 ## Proven results
 
 - M.Tech project report, "AI Based Autonomous Drone for Disaster Monitoring": ZeroGPT 58.7 percent down to 2.1 percent, plagiarism 0 percent, format and front matter identical to the original
