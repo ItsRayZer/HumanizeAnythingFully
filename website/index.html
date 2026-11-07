@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HumanizeAnythingFully — Free AI Text Humanizer</title>
+<meta name="description" content="Rewrite any text in a natural human voice. Same topic, same structure, same format, only the prose changes. Free forever. No login.">
+<link rel="canonical" href="https://humanize-anything-fully.vercel.app/">
+<meta property="og:title" content="HumanizeAnythingFully — Free AI Text Humanizer">
+<meta property="og:description" content="Rewrite any text in a natural human voice. Same structure, same format, only the prose changes. Free forever.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="/website/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/">Humanize<span>Anything</span>Fully</a>
+    <nav class="nav">
+      <a href="#tool">Humanize</a>
+      <a href="#how">How it works</a>
+      <a href="#api">API</a>
+      <a href="#limits">Limits</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>Same structure. Same meaning.<br>Human voice.</h1>
+    <p class="lede">Paste any text and get it back rewritten sentence by sentence, in a natural human voice. Headings, lists, tables, citations, numbers and dates stay exactly where they are. Only the prose changes. Free forever, no login.</p>
+    <p class="hero-note">Phase 1: text only. PDF upload arrives in Phase 2.</p>
+  </section>
+
+  <section id="tool" class="tool card">
+    <div class="tool-head">
+      <h2>Humanize text</h2>
+      <span class="pill" id="charCount">0 / 5,000 chars per request</span>
+    </div>
+
+    <label class="lbl" for="inputText">Your text</label>
+    <textarea id="inputText" rows="12" placeholder="Paste your text here. Headings, lists and tables keep their exact place; only the body prose underneath is rewritten."></textarea>
+    <div class="row under-input">
+      <span id="wordCount" class="muted">0 words · 0 sentences</span>
+      <span class="row-btns">
+        <button class="btn ghost" id="sampleBtn" type="button">Load sample</button>
+        <button class="btn ghost" id="clearBtn" type="button">Clear</button>
+      </span>
+    </div>
+
+    <div class="controls">
+      <div class="field">
+        <label class="lbl" for="modeSelect">Voice</label>
+        <select id="modeSelect">
+          <option value="default">Default — natural rewrite</option>
+          <option value="personal">Personal — first person, concrete detail</option>
+        </select>
+      </div>
+      <div class="field grow">
+        <label class="lbl" for="keyInput">Your free NVIDIA key <span class="muted">(optional, BYOK)</span></label>
+        <input id="keyInput" type="password" autocomplete="off" placeholder="nvapi-... (from build.nvidia.com, free)">
+        <p class="hint">Sent only with this one request. Never stored, never logged, never sent anywhere else. If the site owner has set a shared key, you can leave this blank.</p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" id="humanizeBtn" type="button">Humanize</button>
+      <button class="btn" id="detectBtn" type="button">Check only — detector estimate</button>
+    </div>
+    <div class="progress hidden" id="progress"><div class="bar" id="progressBar"></div><span id="progressText"></span></div>
+    <p class="error hidden" id="errorBox" role="alert"></p>
+
+    <div id="output" class="hidden">
+      <div class="tool-head">
+        <h2>Rewritten text</h2>
+        <span class="pill" id="passPill"></span>
+      </div>
+      <textarea id="outputText" rows="12" readonly></textarea>
+      <div class="row under-input">
+        <span id="outStats" class="muted"></span>
+        <span class="row-btns">
+          <button class="btn" id="copyBtn" type="button">Copy</button>
+          <button class="btn" id="downloadBtn" type="button">Download .txt</button>
+        </span>
+      </div>
+
+      <div class="detector" id="detectorPanel">
+        <h3>Detector estimate <span class="tag">local estimate only</span></h3>
+        <p class="score-line"><span id="detScore" class="score">–</span> <span id="detVerdict" class="muted"></span></p>
+        <p class="muted small" id="detNote">This is a local heuristic estimate from surface signals (sentence rhythm, stock phrases, repeated openers). It is not ZeroGPT and not Turnitin. Confirm with ZeroGPT or Turnitin before reporting a score.</p>
+        <div class="metrics" id="metricsGrid"></div>
+        <div id="flaggedWrap" class="hidden">
+          <h4>Flagged sentences</h4>
+          <ul id="flaggedList"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how" class="card">
+    <h2>How it works</h2>
+    <ol class="steps">
+      <li><strong>Paste.</strong> Text only for now, up to 5,000 characters per request. Longer text is split into parts automatically and rewritten piece by piece.</li>
+      <li><strong>Rewrite.</strong> Every sentence is rebuilt structurally, new words and new structure, not synonym swaps. Headings never change. Facts, numbers, dates, citations and tables stay identical in meaning.</li>
+      <li><strong>Check.</strong> A local detector estimate scores the result on rhythm and stock phrases, flags what still reads as AI-written, and a second pass rebuilds the flagged sentences. Maximum two passes: a third pass only shuffles flags without lowering the score.</li>
+    </ol>
+    <p class="muted">The engine is the HumanizeAnythingFully skill, running on the free NVIDIA model <code>google/gemma-4-31b-it</code> (fast, measured ~11s per rewrite). The skill's own default model, <code>nvidia/nemotron-3-ultra-550b-a55b</code>, is a reasoning model and too slow for a serverless call, so it stays the default in the MCP server instead. The same skill is free on GitHub for your own agent.</p>
+  </section>
+
+  <section id="api" class="card">
+    <h2>Free API</h2>
+    <p>No login, no key needed when the shared key is set. Bring your own free NVIDIA key otherwise.</p>
+    <table class="api-table">
+      <tr><th>Endpoint</th><th>What it does</th></tr>
+      <tr><td><code>POST /api/humanize</code></td><td>Text in, rewritten text out. <code>{ text, mode, key }</code></td></tr>
+      <tr><td><code>POST /api/detect</code></td><td>Local heuristic estimate. <code>{ text }</code></td></tr>
+      <tr><td><code>GET /api/health</code></td><td>Model + limits status.</td></tr>
+    </table>
+    <pre class="code">curl -X POST https://humanize-anything-fully.vercel.app/api/humanize \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Turmeric is a spice obtained from the rhizome of Curcuma longa.", "key": "nvapi-..."}'</pre>
+    <p class="muted small">Limits: 5,000 characters per humanize request, 10 humanize calls per hour per address. Honest errors: 400 for empty or too-long text, 429 when rate limited, 502 when the model is unavailable.</p>
+  </section>
+
+  <section id="limits" class="card">
+    <h2>Honest limits</h2>
+    <ul class="limits-list">
+      <li>No method guarantees a detector score. Real human text is flagged 15 to 33 percent of the time by ZeroGPT. A score is a probability, never a verdict.</li>
+      <li>Simple factual writing, like school definitions, is statistically predictable no matter how it is phrased, and floors near 55 to 60 percent on ZeroGPT across five rewrite passes.</li>
+      <li>No plagiarism percentage is shown here. The local checker cannot run on serverless, and a fake number is never shown.</li>
+      <li>Never use this to disguise who wrote graded or academic work.</li>
+    </ul>
+  </section>
+</main>
+
+<footer class="wrap footer">
+  <p>HumanizeAnythingFully — free forever. <a href="https://github.com/ItsRayZer/HumanizeAnythingFully">Skill + MCP server on GitHub</a> (MIT). PDF upload arrives in Phase 2.</p>
+</footer>
+
+<script src="/website/app.js"></script>
+</body>
+</html>
