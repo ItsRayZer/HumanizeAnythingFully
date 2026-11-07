@@ -1,1 +1,1 @@
-{"cleanUrls":true,"functions":{"api/humanize.js":{"maxDuration":60}},"rewrites":[{"destination":"/website/index.html","source":"/"}]}
+{"cleanUrls":true,"functions":{"api/humanize.js":{"maxDuration":60}},"rewrites":[{"destination":"/website","source":"/"}]}
